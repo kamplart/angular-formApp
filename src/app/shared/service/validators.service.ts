@@ -39,7 +39,7 @@ export class ValidatorsService {
       //return (debug?key:'')+' '+label;
 
       switch( `${label}|${key}` ) {
-        case 'nombreApellido|required':
+        case 'Nombre|pattern':
           return `Debe de ser en formato de nombre y apellido. `+(debug?key:'');
         case 'Email|pattern':
           return `email no valido. `+(debug?key:'');
