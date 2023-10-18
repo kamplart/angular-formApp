@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ValidatorsService } from 'src/app/shared/service/validators.service';
 
 @Component({
   selector: 'app-dinamic-page',
@@ -13,7 +14,7 @@ export class DinamicPageComponent {
   //   favoriteGames: new FormArray([])
   // });
 
-  
+
   public myForm: FormGroup = this.fb.group({
     name: ['', [ Validators.required, Validators.minLength(3) ]],
     favoriteGames: this.fb.array([
@@ -24,7 +25,10 @@ export class DinamicPageComponent {
 
   public newFavorite: FormControl = new FormControl('', Validators.required );
 
-  constructor( private fb: FormBuilder ) {}
+  constructor(
+    private fb: FormBuilder,
+    private ValidatorsService: ValidatorsService
+  ) {}
 
   get favoriteGames() {
     return this.myForm.get('favoriteGames') as FormArray;
@@ -32,8 +36,7 @@ export class DinamicPageComponent {
 
 
   isValidField( field: string ): boolean | null {
-    return this.myForm.controls[field].errors
-      && this.myForm.controls[field].touched;
+    return this.ValidatorsService.isValidField( this.myForm, field );
   }
 
   isValidFieldInArray( formArray: FormArray, index: number ) {
@@ -42,23 +45,8 @@ export class DinamicPageComponent {
   }
 
 
-  getFieldError( field: string ): string | null {
-
-    if ( !this.myForm.controls[field] ) return null;
-
-    const errors = this.myForm.controls[field].errors || {};
-
-    for (const key of Object.keys(errors) ) {
-      switch( key ) {
-        case 'required':
-          return 'Este campo es requerido';
-
-        case 'minlength':
-          return `Mínimo ${ errors['minlength'].requiredLength } caracters.`;
-      }
-    }
-
-    return null;
+  getFieldError( label:string,  field: string ): string | null {
+    return this.ValidatorsService.getFieldError(this.myForm, label,field);
   }
 
   onAddToFavorites():void {
