@@ -36,11 +36,14 @@ export class ValidatorsService {
 
     for (const key of Object.keys(errors) ) {
 
+      console.log(key+' '+label);
       //return (debug?key:'')+' '+label;
 
       switch( `${label}|${key}` ) {
         case 'Nombre|pattern':
           return `Debe de ser en formato de nombre y apellido. `+(debug?key:'');
+        case 'Email|emailTaken':
+          return `Este mail ya existe. `+(debug?key:'');
         case 'Email|pattern':
           return `email no valido. `+(debug?key:'');
         case 'Username|noStrider':
